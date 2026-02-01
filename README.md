@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Chorale de Bons Chœurs
+
+Site vitrine et billetterie en ligne pour une chorale de Saint Barthélémy.
+
+## Features
+
+- 🌍 **Bilingual**: Full support for English and French with easy language switching
+- 🎵 **Concert Listings**: Display upcoming concerts with date, time, and venue information
+- 🎫 **Ticketing System**: Simple modal-based ticket selection with multiple ticket types
+- 📱 **Responsive Design**: Works beautifully on all devices
+- ⚡ **Fast & Modern**: Built with Next.js 16, TypeScript, and Tailwind CSS
 
 ## Getting Started
 
-First, run the development server:
+First, install dependencies:
+
+```bash
+npm install
+```
+
+Then, run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The site supports two languages:
+- French (default): [http://localhost:3000/fr](http://localhost:3000/fr)
+- English: [http://localhost:3000/en](http://localhost:3000/en)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project Structure
 
-## Learn More
+- `app/[locale]/` - Main application pages with i18n routing
+- `components/` - React components (Header, Hero, About, Concerts, etc.)
+- `messages/` - Translation files (en.json, fr.json)
+- `i18n/` - Internationalization configuration
 
-To learn more about Next.js, take a look at the following resources:
+## Building for Production
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run build
+npm start
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Linting
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run lint
+```

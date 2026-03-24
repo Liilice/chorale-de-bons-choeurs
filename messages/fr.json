@@ -1,9 +1,8 @@
 {
   "navigation": {
-    "home": "Accueil",
     "about": "À propos",
     "concerts": "Concerts",
-    "contact": "Contact",
+    "venue": "Lieu",
     "tickets": "Billets"
   },
   "hero": {
@@ -12,16 +11,17 @@
     "cta": "Voir les prochains concerts"
   },
   "about": {
-    "title": "À propos de notre chorale",
+    "title": "Chorale de Bons Chœurs",
     "description": "Fondée à Saint-Barthélemy, la Chorale de Bons Chœurs est une communauté de chanteurs passionnés dédiée à célébrer l'art de la musique chorale. Avec un répertoire diversifié allant des chefs-d'œuvre classiques aux arrangements contemporains, nous nous efforçons d'apporter joie et inspiration à chaque représentation.",
     "members": "Membres actifs",
     "years": "Années de représentation",
-    "concerts": "Concerts annuels"
+    "concerts": "Concerts annuels",
+    "facebook": "Nous suivre sur Facebook"
   },
   "concerts": {
-    "title": "Concerts à venir",
+    "title": "À venir",
     "noUpcoming": "Aucun concert à venir pour le moment. Revenez bientôt !",
-    "buyTickets": "Acheter des billets",
+    "buyTickets": "Réserver sa place",
     "date": "Date",
     "time": "Heure",
     "venue": "Lieu",

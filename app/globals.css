@@ -14,3 +14,10 @@ body {
 html {
   scroll-behavior: smooth;
 }
+
+.bg-image-hero {
+  background-image: url('/hero_v2.jpg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}

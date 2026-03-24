@@ -6,12 +6,12 @@ export function Hero() {
   const t = useTranslations('hero');
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+    <section className="min-h-screen flex items-center justify-center">
       <div className="container mx-auto px-4 text-center">
-        <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6">
+        <h1 className="text-5xl md:text-7xl font-bold text-black mb-6">
           {t('title')}
         </h1>
-        <p className="text-xl md:text-2xl text-gray-700 mb-8 max-w-3xl mx-auto">
+        <p className="text-xl md:text-2xl text-black mb-8 max-w-3xl mx-auto">
           {t('subtitle')}
         </p>
         <a

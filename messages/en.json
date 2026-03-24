@@ -1,9 +1,8 @@
 {
   "navigation": {
-    "home": "Home",
     "about": "About",
     "concerts": "Concerts",
-    "contact": "Contact",
+    "venue": "Venue",
     "tickets": "Tickets"
   },
   "hero": {
@@ -12,16 +11,17 @@
     "cta": "View Upcoming Concerts"
   },
   "about": {
-    "title": "About Our Choir",
+    "title": "Chorale de Bons Chœurs",
     "description": "Founded in Saint-Barthélemy, Chorale de Bons Chœurs is a community of passionate singers dedicated to celebrating the art of choral music. With a diverse repertoire spanning classical masterpieces to contemporary arrangements, we strive to bring joy and inspiration through every performance.",
     "members": "Active Members",
     "years": "Years of Performance",
-    "concerts": "Annual Concerts"
+    "concerts": "Annual Concerts",
+    "facebook": "Follow us on Facebook"
   },
   "concerts": {
-    "title": "Upcoming Concerts",
+    "title": "Upcoming",
     "noUpcoming": "No upcoming concerts scheduled at the moment. Check back soon!",
-    "buyTickets": "Buy Tickets",
+    "buyTickets": "Book Your Seat",
     "date": "Date",
     "time": "Time",
     "venue": "Venue",

@@ -1,0 +1,57 @@
+{
+  "navigation": {
+    "about": "À propos",
+    "concerts": "Concerts",
+    "venue": "Lieu",
+    "tickets": "Billets"
+  },
+  "hero": {
+    "title": "Chorale de Bons Chœurs",
+    "subtitle": "Une chorale passionnée de Saint-Barthélemy apportant harmonie et joie à travers la musique",
+    "cta": "Voir les prochains concerts"
+  },
+  "about": {
+    "title": "Chorale de Bons Chœurs",
+    "description": "Fondée à Saint-Barthélemy, la Chorale de Bons Chœurs est une communauté de chanteurs passionnés dédiée à célébrer l'art de la musique chorale. Avec un répertoire diversifié allant des chefs-d'œuvre classiques aux arrangements contemporains, nous nous efforçons d'apporter joie et inspiration à chaque représentation.",
+    "members": "Membres actifs",
+    "years": "Années de représentation",
+    "concerts": "Concerts annuels",
+    "facebook": "Nous suivre sur Facebook"
+  },
+  "concerts": {
+    "title": "À venir",
+    "noUpcoming": "Aucun concert à venir pour le moment. Revenez bientôt !",
+    "buyTickets": "Réserver sa place",
+    "date": "Date",
+    "time": "Heure",
+    "venue": "Lieu",
+    "price": "À partir de"
+  },
+  "venue": {
+    "title": "Notre salle de spectacle",
+    "description": "La plupart de nos concerts ont lieu dans la magnifique Église de Saint-Barthélemy, un lieu historique avec une acoustique exceptionnelle qui complète parfaitement nos performances chorales.",
+    "address": "Adresse",
+    "addressValue": "Place de l'Église, 97133 Saint-Barthélemy"
+  },
+  "footer": {
+    "contact": "Nous contacter",
+    "email": "Courriel",
+    "phone": "Téléphone",
+    "followUs": "Nous suivre",
+    "rights": "Tous droits réservés."
+  },
+  "ticketing": {
+    "title": "Sélectionnez vos billets",
+    "close": "Fermer",
+    "type": "Type de billet",
+    "price": "Prix",
+    "quantity": "Quantité",
+    "total": "Total",
+    "checkout": "Procéder au paiement",
+    "adult": "Adulte",
+    "student": "Étudiant",
+    "child": "Enfant (moins de 12 ans)",
+    "senior": "Senior (65+)",
+    "selectTickets": "Veuillez sélectionner au moins un billet"
+  }
+}

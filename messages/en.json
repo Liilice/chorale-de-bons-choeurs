@@ -1,0 +1,57 @@
+{
+  "navigation": {
+    "about": "About",
+    "concerts": "Concerts",
+    "venue": "Venue",
+    "tickets": "Tickets"
+  },
+  "hero": {
+    "title": "Chorale de Bons Chœurs",
+    "subtitle": "A passionate choir from Saint-Barthélemy bringing harmony and joy through music",
+    "cta": "View Upcoming Concerts"
+  },
+  "about": {
+    "title": "Chorale de Bons Chœurs",
+    "description": "Founded in Saint-Barthélemy, Chorale de Bons Chœurs is a community of passionate singers dedicated to celebrating the art of choral music. With a diverse repertoire spanning classical masterpieces to contemporary arrangements, we strive to bring joy and inspiration through every performance.",
+    "members": "Active Members",
+    "years": "Years of Performance",
+    "concerts": "Annual Concerts",
+    "facebook": "Follow us on Facebook"
+  },
+  "concerts": {
+    "title": "Upcoming",
+    "noUpcoming": "No upcoming concerts scheduled at the moment. Check back soon!",
+    "buyTickets": "Book Your Seat",
+    "date": "Date",
+    "time": "Time",
+    "venue": "Venue",
+    "price": "Starting at"
+  },
+  "venue": {
+    "title": "Our Performance Venue",
+    "description": "Most of our concerts take place at the beautiful Église de Saint-Barthélemy, a historic venue with exceptional acoustics that perfectly complements our choral performances.",
+    "address": "Address",
+    "addressValue": "Place de l'Église, 97133 Saint-Barthélemy"
+  },
+  "footer": {
+    "contact": "Contact Us",
+    "email": "Email",
+    "phone": "Phone",
+    "followUs": "Follow Us",
+    "rights": "All rights reserved."
+  },
+  "ticketing": {
+    "title": "Select Your Tickets",
+    "close": "Close",
+    "type": "Ticket Type",
+    "price": "Price",
+    "quantity": "Quantity",
+    "total": "Total",
+    "checkout": "Proceed to Checkout",
+    "adult": "Adult",
+    "student": "Student",
+    "child": "Child (under 12)",
+    "senior": "Senior (65+)",
+    "selectTickets": "Please select at least one ticket"
+  }
+}

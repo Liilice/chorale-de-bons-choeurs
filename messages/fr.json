@@ -44,6 +44,8 @@
     "title": "Sélectionnez vos billets",
     "close": "Fermer",
     "type": "Type de billet",
+    "name" : "Nom complet",
+    "email": "Email de réservation",
     "price": "Prix",
     "quantity": "Quantité",
     "total": "Total",
@@ -53,5 +55,11 @@
     "child": "Enfant (moins de 12 ans)",
     "senior": "Senior (65+)",
     "selectTickets": "Veuillez sélectionner au moins un billet"
+  },
+  "confirm" : {
+    "title": "Paiement confirmé !",
+    "message": "Merci pour votre achat. Votre paiement a bien été pris en compte.",
+    "subMessage" : "Votre réservation pour le concert a été enregistrée avec succès. Vous recevrez prochainement un email de confirmation contenant les détails de votre commande et vos billets.",
+    "spam": "Si vous ne recevez pas d’email dans quelques minutes, pensez à vérifier votre dossier spam ou courrier indésirable."
   }
 }

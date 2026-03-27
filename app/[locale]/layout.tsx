@@ -28,6 +28,7 @@ export default async function LocaleLayout({
       <head>
         <title>Chorale de Bons Chœurs</title>
         <meta name="description" content="Site vitrine et billetterie en ligne pour une chorale de Saint Barthélémy" />
+        <script src="https://gateway.sumup.com/gateway/ecom/card/v2/sdk.js" async></script>
       </head>
       <body className="antialiased">
         <NextIntlClientProvider messages={messages}>

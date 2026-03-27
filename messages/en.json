@@ -44,6 +44,8 @@
     "title": "Select Your Tickets",
     "close": "Close",
     "type": "Ticket Type",
+    "name" : "Full Name",
+    "email": "Booking email",
     "price": "Price",
     "quantity": "Quantity",
     "total": "Total",
@@ -53,5 +55,11 @@
     "child": "Child (under 12)",
     "senior": "Senior (65+)",
     "selectTickets": "Please select at least one ticket"
+  },
+  "confirm" : {
+    "title": "Payment Confirmed !",
+    "message": "Thank you for your purchase. Your payment has been successfully processed.",
+    "subMessage" : "Your reservation for the concert has been successfully recorded. You will receive a confirmation email shortly with your order details and tickets.",
+    "spam": "Your reservation for the concert has been successfully recorded. You will receive a confirmation email shortly with your order details and tickets."
   }
 }

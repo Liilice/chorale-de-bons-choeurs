@@ -2,6 +2,7 @@ import SumUp from "@sumup/sdk";
 import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import { findOrderByOrderID, updateOrder } from "../../../../src/lib/orders";
+import { createTicketUsage } from "../../../../src/lib/ticket_usages";
 
 enum Status {
   PENDING = "pending",
@@ -72,6 +73,16 @@ export async function POST(req: NextRequest) {
 
     if (status === "PAID") {
       await updateOrder(order.id, { status: Status.PAID });
+      await createTicketUsage({
+        name: order.name,
+        email: order.email,
+        concertDate: order.concertDate,
+        concertTime: order.concertTime,
+        concertTitle: order.concertTitle,
+        quantitiesBuy: order.quantities,
+        quantities: order.quantities,
+        createdAt: new Date().toISOString(),
+      });
       // TODO:
       // 4. stocker paidAt, checkoutId, transactionId
       // 5. générer billet + QR code côté serveur

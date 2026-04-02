@@ -6,7 +6,6 @@ import { TicketingModal } from "./TicketingModal";
 import Image from "next/image";
 
 export interface Concert {
-  id: number;
   title: string;
   date: string;
   time: string;
@@ -14,14 +13,19 @@ export interface Concert {
   price: number;
 }
 
-// Sample concert data
 export const concerts: Concert[] = [
   {
-    id: 1,
-    title: "Concert de Noël",
-    date: "2026-12-20",
-    time: "19:00",
-    venue: "Église de Saint-Barthélemy",
+    title: "Concert de Printemps",
+    date: "2026-04-10",
+    time: "20:00",
+    venue: "Église anglicane de Gustavia",
+    price: 15,
+  },
+  {
+    title: "Concert de Printemps",
+    date: "2026-04-12",
+    time: "18:30",
+    venue: "Église anglicane de Gustavia",
     price: 15,
   },
 ];
@@ -38,6 +42,7 @@ export function Concerts() {
       year: "numeric",
       month: "long",
       day: "numeric",
+      weekday: 'long',
     });
   };
 
@@ -49,41 +54,41 @@ export function Concerts() {
             {t("title")}
           </h2>
           {concerts.length > 0 ? (
-            <div className="grid md:grid-cols-2 gap-8 max-w-5xl">
-              <div
-                key={concerts[0].id}
+            <div className="grid md:grid-cols-2 gap-8">
+              {concerts.map((concert, key) => (<div
+                key={concert.title + key}
                 className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
               >
                 <div className="p-6">
                   <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                    {concerts[0].title}
+                    {concert.title}
                   </h3>
                   <div className="space-y-2 mb-6">
                     <div className="flex items-center text-gray-600">
                       <span className="font-medium mr-2">{t("date")}:</span>
-                      <span>{formatDate(concerts[0].date)}</span>
+                      <span>{formatDate(concert.date)}</span>
                     </div>
                     <div className="flex items-center text-gray-600">
                       <span className="font-medium mr-2">{t("time")}:</span>
-                      <span>{concerts[0].time}</span>
+                      <span>{concert.time}</span>
                     </div>
                     <div className="flex items-center text-gray-600">
                       <span className="font-medium mr-2">{t("venue")}:</span>
-                      <span>{concerts[0].venue}</span>
+                      <span>{concert.venue}</span>
                     </div>
                     <div className="flex items-center text-gray-600">
                       <span className="font-medium mr-2">{t("price")}:</span>
-                      <span>{concerts[0].price}€</span>
+                      <span>{concert.price}€</span>
                     </div>
                   </div>
                   <button
-                    onClick={() => setSelectedConcert(concerts[0])}
+                    onClick={() => setSelectedConcert(concert)}
                     className="w-full px-6 py-3 bg-[#D2232A] text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors"
                   >
                     {t("buyTickets")}
                   </button>
                 </div>
-              </div>
+              </div>))}
             </div>
           ) : (
             <p className="text-center text-gray-600 text-lg">

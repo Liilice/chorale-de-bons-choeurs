@@ -1,8 +1,6 @@
 import { useTranslations } from "next-intl";
-import type { TicketType } from "../TicketingModal";
 
 const Informations = ({
-  ticketTypes,
   quantities,
   updateQuantity,
   hasTickets,
@@ -14,9 +12,8 @@ const Informations = ({
   handleCheckout,
   error,
 }: {
-  ticketTypes: TicketType[];
-  quantities: Record<string, number>;
-  updateQuantity: (id: string, delta: number) => void;
+  quantities: number;
+  updateQuantity: (delta: number) => void;
   hasTickets: boolean;
   loading: boolean;
   customerName: string;
@@ -28,9 +25,7 @@ const Informations = ({
 }) => {
   const t = useTranslations("ticketing");
 
-  const total = ticketTypes.reduce((sum: number, ticket: TicketType) => {
-    return sum + (quantities[ticket.id] || 0) * ticket.price;
-  }, 0);
+  const total = quantities * 15;
 
   return (
     <form className="p-6">
@@ -54,41 +49,34 @@ const Informations = ({
         placeholder={t("email")}
         onChange={(e) => setCustomerEmail(e.target.value)}
       />
-      <div className="space-y-4 mt-6">
-        {ticketTypes.map((ticket: TicketType) => (
-          <div
-            key={ticket.id}
-            className="flex items-center justify-between p-4 border border-gray-200 rounded-lg"
+      <div className="space-y-4 mt-6 flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+        <div className="flex-1">
+          <div className="font-medium text-gray-900">adulte</div>
+          <div className="text-gray-600">15€</div>
+        </div>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              updateQuantity(-1);
+            }}
+            className="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold"
           >
-            <div className="flex-1">
-              <div className="font-medium text-gray-900">{ticket.name}</div>
-              <div className="text-gray-600">{ticket.price.toFixed(2)}€</div>
-            </div>
-            <div className="flex items-center gap-3">
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  updateQuantity(ticket.id, -1);
-                }}
-                className="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold"
-              >
-                −
-              </button>
-              <span className="w-8 text-center font-medium">
-                {quantities[ticket.id] || 0}
-              </span>
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  updateQuantity(ticket.id, 1);
-                }}
-                className="w-8 h-8 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold"
-              >
-                +
-              </button>
-            </div>
-          </div>
-        ))}
+            −
+          </button>
+          <span className="w-8 text-center font-medium">
+            {quantities}
+          </span>
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              updateQuantity(1);
+            }}
+            className="w-8 h-8 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold"
+          >
+            +
+          </button>
+        </div>
       </div>
       <div className="mt-6 pt-6 border-t border-gray-200">
         <div className="flex items-center justify-between text-xl font-bold mb-4">

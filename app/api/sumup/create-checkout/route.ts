@@ -1,5 +1,7 @@
 import SumUp from "@sumup/sdk";
 import { NextRequest, NextResponse } from "next/server";
+import { findOrCreateUser, findAll } from "../../../../src/lib/users";
+import { createOrder } from "../../../../src/lib/orders";
 
 const client = new SumUp({
   apiKey: process.env.SUMUP_API_KEY,
@@ -9,6 +11,12 @@ type TicketInput = {
   type: "adult" | "student" | "child" | "senior";
   quantity: number;
 };
+
+enum Status {
+  PENDING = "pending",
+  PAID = "paid",
+  FAILED = "failed",
+}
 
 const PRICE_RULES = {
   adult: 1,
@@ -47,6 +55,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Payload invalide" }, { status: 400 });
     }
 
+    const customer = await findOrCreateUser({
+      name: customerName,
+      email: customerEmail,
+    });
+
     const normalizedTickets = tickets
       .filter((t) => t.quantity > 0)
       .map((t) => ({
@@ -67,26 +80,11 @@ export async function POST(req: NextRequest) {
         .toFixed(2)
     );
 
-    // TODO: créer une vraie commande en base
     const orderId = crypto.randomUUID();
-
-    // Exemple d'objet commande local
-    const localOrder = {
-      id: orderId,
-      name: customerName,
-      email: customerEmail,
-      concertId,
-      concertTitle,
-      tickets: normalizedTickets,
-      amount,
-      status: "pending",
-      createdAt: new Date().toISOString(),
-    };
-
-    console.log("Commande locale créée:", localOrder);
 
     const checkout = await client.checkouts.create({
       amount,
+      customer_id: customer.customerId,
       checkout_reference: orderId,
       currency: "EUR",
       merchant_code: process.env.SUMUP_MERCHANT_CODE!,
@@ -96,8 +94,18 @@ export async function POST(req: NextRequest) {
       return_url: process.env.SUMUP_WEBHOOK_URL!,
     });
 
-    // TODO: sauvegarder aussi checkout.id sur la commande
-    console.log("Checkout SumUp créé:", checkout.id);
+    await createOrder({
+      orderId: orderId,
+      name: customerName,
+      email: customerEmail,
+      concertId,
+      concertTitle,
+      tickets: normalizedTickets,
+      amount,
+      status: Status.PENDING,
+      checkoutId: checkout.id,
+      createdAt: new Date().toISOString(),
+    });
 
     return NextResponse.json({
       orderId,

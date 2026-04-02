@@ -51,6 +51,7 @@ export function TicketingModal({ concert, onClose }: TicketingModalProps) {
   const [step, setStep] = useState<"selection" | "payment" | "confirm">(
     "selection"
   );
+  const [paiementError, setPaiementError] = useState<boolean>(false);
   const ticketTypes: TicketType[] = [
     { id: "adult", name: t("adult"), price: concert.price },
   ];
@@ -124,7 +125,8 @@ export function TicketingModal({ concert, onClose }: TicketingModalProps) {
           console.log("Réponse du paiement SumUp:", { type, body });
           if (type === "success" && body.status === "PAID") {
             setStep("confirm");
-          } else {
+          } else if (type === "success" && body.status === "FAILED") {
+            setPaiementError(true);
             setStep("payment");
           }
         },
@@ -156,7 +158,7 @@ export function TicketingModal({ concert, onClose }: TicketingModalProps) {
         </div>
 
         {step === "payment" && (
-          <PaiementModal showPayment={showPayment} error={error} />
+          <PaiementModal showPayment={showPayment} paiementError={paiementError} setPaiementError={setPaiementError}/>
         )}
 
         {step === "selection" && (

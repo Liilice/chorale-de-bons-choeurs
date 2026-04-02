@@ -1,7 +1,22 @@
-'use client';
+"use client";
 
-import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useTranslations } from "next-intl";
+import { useState } from "react";
+import PaiementModal from "./steps/Paiement";
+import Confirmation from "./steps/Confirmation";
+import Informations from "./steps/Informations";
+
+declare global {
+  interface Window {
+    SumUpCard?: {
+      mount: (options: {
+        id: string;
+        checkoutId: string;
+        onResponse: (type: string, body: unknown) => void;
+      }) => void;
+    };
+  }
+}
 
 interface Concert {
   id: number;
@@ -12,7 +27,7 @@ interface Concert {
   price: number;
 }
 
-interface TicketType {
+export interface TicketType {
   id: string;
   name: string;
   price: number;
@@ -24,41 +39,105 @@ interface TicketingModalProps {
 }
 
 export function TicketingModal({ concert, onClose }: TicketingModalProps) {
-  const t = useTranslations('ticketing');
+  const t = useTranslations("ticketing");
   const [quantities, setQuantities] = useState<Record<string, number>>({
     adult: 0,
-    student: 0,
-    child: 0,
-    senior: 0
   });
-
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [showPayment, setShowPayment] = useState(false);
+  const [customerEmail, setCustomerEmail] = useState("");
+  const [customerName, setCustomerName] = useState("");
+  const [step, setStep] = useState<"selection" | "payment" | "confirm">(
+    "selection"
+  );
+  const [paiementError, setPaiementError] = useState<boolean>(false);
   const ticketTypes: TicketType[] = [
-    { id: 'adult', name: t('adult'), price: concert.price },
-    { id: 'student', name: t('student'), price: concert.price * 0.75 },
-    { id: 'child', name: t('child'), price: concert.price * 0.5 },
-    { id: 'senior', name: t('senior'), price: concert.price * 0.8 }
+    { id: "adult", name: t("adult"), price: concert.price },
   ];
 
   const updateQuantity = (id: string, delta: number) => {
-    setQuantities(prev => ({
+    setQuantities((prev) => ({
       ...prev,
-      [id]: Math.max(0, (prev[id] || 0) + delta)
+      [id]: Math.max(0, (prev[id] || 0) + delta),
     }));
   };
 
-  const total = ticketTypes.reduce((sum, ticket) => {
-    return sum + (quantities[ticket.id] || 0) * ticket.price;
-  }, 0);
+  const hasTickets = Object.values(quantities).some((q) => q > 0);
 
-  const hasTickets = Object.values(quantities).some(q => q > 0);
-
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     if (!hasTickets) {
-      alert(t('selectTickets'));
+      alert(t("selectTickets"));
       return;
     }
-    alert(`${t('total')}: ${total.toFixed(2)}€`);
-    onClose();
+    setStep("payment");
+
+    try {
+      setLoading(true);
+      setError("");
+      setShowPayment(true);
+
+      const selectedTickets = ticketTypes
+        .filter((ticket) => (quantities[ticket.id] || 0) > 0)
+        .map((ticket) => ({
+          type: ticket.id,
+          quantity: quantities[ticket.id] || 0,
+        }));
+
+      const response = await fetch("/api/sumup/create-checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          customerName: customerName,
+          customerEmail: customerEmail,
+          concertId: concert.id,
+          concertTitle: concert.title,
+          basePrice: concert.price,
+          tickets: selectedTickets,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.error || "Erreur lors de la création du checkout SumUp."
+        );
+      }
+
+      if (!window.SumUpCard) {
+        throw new Error("Le SDK SumUp n’est pas disponible.");
+      }
+
+      const container = document.getElementById("sumup-card");
+      if (!container) {
+        throw new Error("Conteneur de paiement introuvable.");
+      }
+
+      container.innerHTML = "";
+
+      window.SumUpCard.mount({
+        id: "sumup-card",
+        checkoutId: data.checkoutId,
+        onResponse: (type, body: any) => {
+          console.log("Réponse du paiement SumUp:", { type, body });
+          if (type === "success" && body.status === "PAID") {
+            setStep("confirm");
+          } else if (type === "success" && body.status === "FAILED") {
+            setPaiementError(true);
+            setStep("payment");
+          }
+        },
+      });
+    } catch (err) {
+      console.error(err);
+      setError(err instanceof Error ? err.message : "Une erreur est survenue.");
+      setShowPayment(false);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -66,9 +145,7 @@ export function TicketingModal({ concert, onClose }: TicketingModalProps) {
       <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-gray-900">
-              {t('title')}
-            </h2>
+            <h2 className="text-2xl font-bold text-gray-900">{t("title")}</h2>
             <button
               onClick={onClose}
               className="text-gray-500 hover:text-gray-700 text-2xl"
@@ -76,55 +153,31 @@ export function TicketingModal({ concert, onClose }: TicketingModalProps) {
               ×
             </button>
           </div>
+
           <p className="text-gray-600 mt-2">{concert.title}</p>
         </div>
 
-        <div className="p-6">
-          <div className="space-y-4">
-            {ticketTypes.map(ticket => (
-              <div 
-                key={ticket.id}
-                className="flex items-center justify-between p-4 border border-gray-200 rounded-lg"
-              >
-                <div className="flex-1">
-                  <div className="font-medium text-gray-900">{ticket.name}</div>
-                  <div className="text-gray-600">{ticket.price.toFixed(2)}€</div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <button
-                    onClick={() => updateQuantity(ticket.id, -1)}
-                    className="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold"
-                  >
-                    −
-                  </button>
-                  <span className="w-8 text-center font-medium">
-                    {quantities[ticket.id] || 0}
-                  </span>
-                  <button
-                    onClick={() => updateQuantity(ticket.id, 1)}
-                    className="w-8 h-8 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold"
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
+        {step === "payment" && (
+          <PaiementModal showPayment={showPayment} paiementError={paiementError} setPaiementError={setPaiementError}/>
+        )}
 
-          <div className="mt-6 pt-6 border-t border-gray-200">
-            <div className="flex items-center justify-between text-xl font-bold mb-4">
-              <span>{t('total')}:</span>
-              <span>{total.toFixed(2)}€</span>
-            </div>
-            <button
-              onClick={handleCheckout}
-              disabled={!hasTickets}
-              className="w-full px-6 py-4 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
-            >
-              {t('checkout')}
-            </button>
-          </div>
-        </div>
+        {step === "selection" && (
+          <Informations
+            ticketTypes={ticketTypes}
+            quantities={quantities}
+            updateQuantity={updateQuantity}
+            hasTickets={hasTickets}
+            loading={loading}
+            customerEmail={customerEmail}
+            setCustomerEmail={setCustomerEmail}
+            customerName={customerName}
+            setCustomerName={setCustomerName}
+            handleCheckout={handleCheckout}
+            error={error}
+          />
+        )}
+
+        {step === "confirm" && <Confirmation />}
       </div>
     </div>
   );

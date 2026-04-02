@@ -53,3 +53,16 @@ export async function updateOrder(
 ): Promise<void> {
   await db.collection("orders").doc(documentID).update(update);
 }
+
+export async function findAllOrders(): Promise<Order[]> {
+  const snapshot = await db.collection("orders").get();
+  const orders = snapshot.docs.map((doc) => {
+    const docData = doc.data();
+    return {
+      ...docData,
+      id: doc.id,
+      tickets: JSON.parse(docData.tickets),
+    } as Order;
+  });
+  return orders;
+}

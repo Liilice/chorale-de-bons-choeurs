@@ -4,13 +4,11 @@ type OrderInput = {
   orderId: string;
   name: string;
   email: string;
-  concertId: number;
+  concertDate: string;
+  concertTime: string;
   concertTitle: string;
-  tickets: {
-    type: "adult" | "student" | "child" | "senior";
-    quantity: number;
-    unitPrice: number;
-  }[];
+  basePrice: number;
+  quantities: number;
   amount: number;
   status: "pending" | "paid" | "failed";
   checkoutId: string | undefined;
@@ -24,9 +22,11 @@ export async function createOrder(data: OrderInput): Promise<string> {
     orderId: data.orderId,
     name: data.name,
     email: data.email,
-    concertId: data.concertId,
+    concertDate: data.concertDate,
+    concertTime: data.concertTime,
     concertTitle: data.concertTitle,
-    tickets: JSON.stringify(data.tickets),
+    basePrice: data.basePrice,
+    quantities: data.quantities,
     amount: data.amount,
     status: "pending",
     checkoutId: data.checkoutId,
@@ -52,4 +52,16 @@ export async function updateOrder(
   update: Partial<Order>
 ): Promise<void> {
   await db.collection("orders").doc(documentID).update(update);
+}
+
+export async function findAllOrders(): Promise<Order[]> {
+  const snapshot = await db.collection("orders").get();
+  const orders = snapshot.docs.map((doc) => {
+    const docData = doc.data();
+    return {
+      ...docData,
+      id: doc.id,
+    } as Order;
+  });
+  return orders;
 }

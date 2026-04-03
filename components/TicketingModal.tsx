@@ -5,6 +5,7 @@ import { useState } from "react";
 import PaiementModal from "./steps/Paiement";
 import Confirmation from "./steps/Confirmation";
 import Informations from "./steps/Informations";
+import type { Concert } from "./Concerts";
 
 declare global {
   interface Window {
@@ -18,21 +19,6 @@ declare global {
   }
 }
 
-interface Concert {
-  id: number;
-  title: string;
-  date: string;
-  time: string;
-  venue: string;
-  price: number;
-}
-
-export interface TicketType {
-  id: string;
-  name: string;
-  price: number;
-}
-
 interface TicketingModalProps {
   concert: Concert;
   onClose: () => void;
@@ -40,9 +26,6 @@ interface TicketingModalProps {
 
 export function TicketingModal({ concert, onClose }: TicketingModalProps) {
   const t = useTranslations("ticketing");
-  const [quantities, setQuantities] = useState<Record<string, number>>({
-    adult: 0,
-  });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
@@ -52,18 +35,23 @@ export function TicketingModal({ concert, onClose }: TicketingModalProps) {
     "selection"
   );
   const [paiementError, setPaiementError] = useState<boolean>(false);
-  const ticketTypes: TicketType[] = [
-    { id: "adult", name: t("adult"), price: concert.price },
-  ];
+  const [quantities, setQuantities] = useState<number>(0);
 
-  const updateQuantity = (id: string, delta: number) => {
-    setQuantities((prev) => ({
-      ...prev,
-      [id]: Math.max(0, (prev[id] || 0) + delta),
-    }));
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("fr-FR", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      weekday: "long",
+    });
   };
 
-  const hasTickets = Object.values(quantities).some((q) => q > 0);
+  const updateQuantity = (delta: number) => {
+    setQuantities((prev) => (Math.max(0, prev + delta)));
+  };
+
+  const hasTickets = quantities > 0;
 
   const handleCheckout = async () => {
     if (!hasTickets) {
@@ -77,13 +65,6 @@ export function TicketingModal({ concert, onClose }: TicketingModalProps) {
       setError("");
       setShowPayment(true);
 
-      const selectedTickets = ticketTypes
-        .filter((ticket) => (quantities[ticket.id] || 0) > 0)
-        .map((ticket) => ({
-          type: ticket.id,
-          quantity: quantities[ticket.id] || 0,
-        }));
-
       const response = await fetch("/api/sumup/create-checkout", {
         method: "POST",
         headers: {
@@ -92,10 +73,11 @@ export function TicketingModal({ concert, onClose }: TicketingModalProps) {
         body: JSON.stringify({
           customerName: customerName,
           customerEmail: customerEmail,
-          concertId: concert.id,
+          concertDate : concert.date,
+          concertTime : concert.time,
           concertTitle: concert.title,
           basePrice: concert.price,
-          tickets: selectedTickets,
+          quantities: quantities,
         }),
       });
 
@@ -155,15 +137,21 @@ export function TicketingModal({ concert, onClose }: TicketingModalProps) {
           </div>
 
           <p className="text-gray-600 mt-2">{concert.title}</p>
+          <p className="text-gray-600 mt-2">
+            {formatDate(concert.date)} - {concert.time}
+          </p>
         </div>
 
         {step === "payment" && (
-          <PaiementModal showPayment={showPayment} paiementError={paiementError} setPaiementError={setPaiementError}/>
+          <PaiementModal
+            showPayment={showPayment}
+            paiementError={paiementError}
+            setPaiementError={setPaiementError}
+          />
         )}
 
         {step === "selection" && (
           <Informations
-            ticketTypes={ticketTypes}
             quantities={quantities}
             updateQuantity={updateQuantity}
             hasTickets={hasTickets}

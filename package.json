@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@sumup/sdk": "^0.1.2",
+    "bcrypt": "^6.0.0",
     "firebase-admin": "^13.7.0",
     "next": "16.1.6",
     "next-intl": "^4.8.1",
@@ -19,6 +20,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/bcrypt": "^6.0.0",
     "@types/node": "^20",
     "@types/nodemailer": "^7.0.11",
     "@types/react": "^19",

@@ -16,7 +16,7 @@
     "members": "Membres actifs",
     "years": "Années de représentation",
     "concerts": "Concerts annuels",
-    "facebook": "Nous suivre sur Facebook"
+    "facebook": "Facebook"
   },
   "concerts": {
     "title": "À venir",
@@ -31,7 +31,8 @@
     "title": "Notre salle de spectacle",
     "description": "La plupart de nos concerts ont lieu dans la magnifique Église de Saint-Barthélemy, un lieu historique avec une acoustique exceptionnelle qui complète parfaitement nos performances chorales.",
     "address": "Adresse",
-    "addressValue": "Place de l'Église, 97133 Saint-Barthélemy"
+    "addressValue": "Place de l'Église, 97133 Saint-Barthélemy",
+    "map" : "Voir sur la carte"
   },
   "footer": {
     "contact": "Nous contacter",

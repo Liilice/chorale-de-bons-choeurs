@@ -1,44 +1,57 @@
-'use client';
+"use client";
 
-import { useTranslations } from 'next-intl';
+import { useTranslations } from "next-intl";
 
 export function Footer() {
-  const t = useTranslations('footer');
+  const t = useTranslations("footer");
 
   return (
-    <footer className="bg-gray-900 text-white py-12">
+    <footer className="bg-[#F6F0EA] text-black/70 py-12">
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-3 gap-8 mb-8">
           <div>
-            <h3 className="text-xl font-bold mb-4">{t('contact')}</h3>
-            <div className="space-y-2">
-              <p className="text-gray-300">
-                <span className="font-medium">{t('email')}:</span> contact@chorale-bons-choeurs.fr
-              </p>
-              <p className="text-gray-300">
-                <span className="font-medium">{t('phone')}:</span> +590 590 XX XX XX
-              </p>
-            </div>
+            <h3 className="text-xl font-bold mb-4">{t("contact")}</h3>
+            <p className=" space-y-2 text-black/70">
+              <span className="font-medium text-black/70">{t("email")}:</span>{" "}
+              <a
+                href={`mailto:annemarie.fwi@gmail.com`}
+                className="text-black/70 underline cursor-pointer hover:text-[#AF2027] transition-colors"
+              >
+                annemarie.fwi@gmail.com
+              </a>
+            </p>
           </div>
           <div>
-            <h3 className="text-xl font-bold mb-4">{t('followUs')}</h3>
+            <h3 className="text-xl font-bold mb-4">{t("followUs")}</h3>
             <div className="flex gap-4">
-              <a href="#" className="text-gray-300 hover:text-white transition-colors">
+              <a
+                href="https://www.facebook.com/ChoraledeBonsChoeurs"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-black/70 hover:text-[#0866FF] transition-colors"
+              >
                 Facebook
               </a>
-              <a href="#" className="text-gray-300 hover:text-white transition-colors">
+              <a
+                href="https://www.instagram.com/choraledebonschoeurs.sbh/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-black/70 hover:text-[#F116BA] transition-colors"
+              >
                 Instagram
               </a>
             </div>
           </div>
           <div>
-            <h3 className="text-xl font-bold mb-4">Chorale de Bons Chœurs</h3>
-            <p className="text-gray-300">Saint-Barthélemy</p>
+            <h3 className="text-xl font-bold mb-4 text-[#AF2027]">
+              Chorale de Bons Chœurs
+            </h3>
+            <p className="text-black/70">Saint-Barthélemy</p>
           </div>
         </div>
-        <div className="border-t border-gray-800 pt-8 text-center text-gray-400">
-          <p>© {new Date().getFullYear()} Chorale de Bons Chœurs. {t('rights')}</p>
-        </div>
+        <p className="text-center text-gray-500">
+          © {new Date().getFullYear()} Chorale de Bons Chœurs. {t("rights")}
+        </p>
       </div>
     </footer>
   );

@@ -42,20 +42,21 @@ export function Concerts() {
       year: "numeric",
       month: "long",
       day: "numeric",
-      weekday: 'long',
+      weekday: "long",
     });
   };
 
   return (
     <>
-      <section id="concerts" className="px-20 py-10 bg-gray-50">
-        <div className="container">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-12 text-center">
-            {t("title")}
-          </h2>
-          {concerts.length > 0 ? (
-            <div className="grid md:grid-cols-2 gap-8">
-              {concerts.map((concert, key) => (<div
+      <section id="concerts" className="px-8 py-10 lg:px-16 ">
+        <span className="font-bold uppercase tracking-[0.2em] text-sm text-[#AF2027]">
+          Calendrier Musical
+        </span>
+        <h2 className="mt-4 mb-4 text-5xl text-on-background">{t("title")}</h2>
+        {concerts.length > 0 ? (
+          <div className="grid md:grid-cols-2 gap-8">
+            {concerts.map((concert, key) => (
+              <div
                 key={concert.title + key}
                 className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
               >
@@ -88,34 +89,54 @@ export function Concerts() {
                     {t("buyTickets")}
                   </button>
                 </div>
-              </div>))}
-            </div>
-          ) : (
-            <p className="text-center text-gray-600 text-lg">
-              {t("noUpcoming")}
-            </p>
-          )}
-        </div>
-        <div className="container mt-12">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-8 text-center">
-            {tVenue("title")}
-          </h2>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-center text-gray-600 text-lg">{t("noUpcoming")}</p>
+        )}
+        <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+          {/* Content */}
+          <div className="w-full flex flex-col justify-center">
+            <h2 className="mt-4 mb-4 text-5xl text-on-background">
+              {tVenue("title")}
+            </h2>
 
-          <div className="flex flex-row gap-2.5">
-            <div>
-              <p className="text-lg text-gray-700 mb-8 leading-relaxed">
-                {tVenue("description")}
-              </p>
-              <h3 className="font-medium text-gray-900 mb-2">
+            <p className="text-lg text-gray-700 mb-8 leading-relaxed">
+              {tVenue("description")}
+            </p>
+
+            <div className="bg-[#F6F0EA] px-10 py-5">
+              <h3 className="font-semibold text-xl text-gray-900 mb-2">
                 {tVenue("address")}
               </h3>
-              <p className="text-gray-700">{tVenue("addressValue")}</p>
+
+              <p className="text-gray-700">
+                Église à Gustavia <br />
+                Rue Samuel Fahlberg, Gustavia 97133, Saint-Barthélemy
+              </p>
             </div>
+
+            <div className="mt-4">
+              <a
+                href="https://www.google.com/maps?q=Rue+Samuel+Fahlberg,+Gustavia+97133,+Saint-Barthélemy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-lg font-bold uppercase text-[#D2232A] hover:underline"
+              >
+                <Image src="/ping.svg" alt="map" width={25} height={25} />
+                {tVenue("map")}
+              </a>
+            </div>
+          </div>
+          {/* Image */}
+          <div className="w-full h-full">
             <Image
-              src={"/eglise.png"}
-              alt={"église"}
+              src="/eglise.png"
+              alt="Église"
               width={700}
               height={400}
+              className="w-full h-full object-cover rounded-xl"
             />
           </div>
         </div>

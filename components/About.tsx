@@ -15,7 +15,7 @@ export function About() {
     <>
       <section className="relative min-h-[90vh] flex items-center pt-20 pb-24 px-6 overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-r from-white via-white/20 to-transparent z-10" />
+          <div className="absolute inset-0 bg-gradient-to-r from-white via-white/40 to-transparent z-10" />
           <Image
             src="/hero_v3.jpeg"
             alt="Photo des artistes de notre chorale"

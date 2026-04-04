@@ -51,13 +51,15 @@ export async function POST(req: NextRequest) {
       email: customerEmail,
     });
 
+    console.log("Customer trouvé ou créé:", customer);
+
     const amount = Number(quantities*basePrice);
 
     const orderId = crypto.randomUUID();
 
     const checkout = await client.checkouts.create({
       amount,
-      customer_id: customer.customerId,
+      // customer_id: customer.customerId,
       checkout_reference: orderId,
       currency: "EUR",
       merchant_code: process.env.SUMUP_MERCHANT_CODE!,

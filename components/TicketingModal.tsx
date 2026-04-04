@@ -38,7 +38,9 @@ export function TicketingModal({ concert, onClose }: TicketingModalProps) {
   const [quantities, setQuantities] = useState<number>(0);
 
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
+    const [year, month, day] = dateString.split("-").map(Number);
+    const date = new Date(year, month - 1, day);
+
     return date.toLocaleDateString("fr-FR", {
       year: "numeric",
       month: "long",
@@ -48,7 +50,7 @@ export function TicketingModal({ concert, onClose }: TicketingModalProps) {
   };
 
   const updateQuantity = (delta: number) => {
-    setQuantities((prev) => (Math.max(0, prev + delta)));
+    setQuantities((prev) => Math.max(0, prev + delta));
   };
 
   const hasTickets = quantities > 0;
@@ -73,8 +75,8 @@ export function TicketingModal({ concert, onClose }: TicketingModalProps) {
         body: JSON.stringify({
           customerName: customerName,
           customerEmail: customerEmail,
-          concertDate : concert.date,
-          concertTime : concert.time,
+          concertDate: concert.date,
+          concertTime: concert.time,
           concertTitle: concert.title,
           basePrice: concert.price,
           quantities: quantities,

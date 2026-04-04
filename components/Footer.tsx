@@ -17,7 +17,7 @@ export function Footer() {
                 href={`mailto:annemarie.fwi@gmail.com`}
                 className="text-black/70 underline cursor-pointer hover:text-[#AF2027] transition-colors"
               >
-                annemarie.fwi@gmail.com
+                Cdbchoeur@gmail.com
               </a>
             </p>
           </div>

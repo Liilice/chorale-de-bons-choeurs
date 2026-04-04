@@ -107,10 +107,6 @@ function getConfirmationEmailTemplate({
       </div>
 
       <!-- Footer note -->
-      <p style="margin: 24px 0 12px; font-size: 14px; color: #6b7280;">
-        Si vous ne recevez pas vos informations dans les prochaines minutes, pensez à vérifier vos spams.
-      </p>
-
       <p style="margin: 0; font-size: 16px; color: #111827; font-weight: bold;">
         À très bientôt 🎶
       </p>
@@ -171,6 +167,7 @@ export async function POST(req: NextRequest) {
         await transporter.sendMail({
           from: process.env.GMAIL_USERNAME,
           to: order.email,
+          cc: process.env.CHORALE_EMAIL,
           subject: `Chorale confirmation`,
           html: getConfirmationEmailTemplate({
             customerName: order.name,

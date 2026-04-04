@@ -18,15 +18,15 @@ export const concerts: Concert[] = [
     title: "Concert de Printemps",
     date: "2026-04-10",
     time: "20:00",
-    venue: "Église anglicane de Gustavia",
-    price: 1,
+    venue: "Eglise Anglicane de Gustavia",
+    price: 15,
   },
   {
     title: "Concert de Printemps",
     date: "2026-04-12",
     time: "18:30",
-    venue: "Église anglicane de Gustavia",
-    price: 1,
+    venue: "Eglise Anglicane de Gustavia",
+    price: 15,
   },
 ];
 
@@ -112,7 +112,7 @@ export function Concerts() {
               </h3>
 
               <p className="text-gray-700">
-                Église à Gustavia <br />
+                Eglise Anglicane de Gustavia<br />
                 Rue Samuel Fahlberg, Gustavia 97133, Saint-Barthélemy
               </p>
             </div>

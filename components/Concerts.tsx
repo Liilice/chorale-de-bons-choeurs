@@ -19,14 +19,14 @@ export const concerts: Concert[] = [
     date: "2026-04-10",
     time: "20:00",
     venue: "Église anglicane de Gustavia",
-    price: 15,
+    price: 1,
   },
   {
     title: "Concert de Printemps",
     date: "2026-04-12",
     time: "18:30",
     venue: "Église anglicane de Gustavia",
-    price: 15,
+    price: 1,
   },
 ];
 

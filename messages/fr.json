@@ -25,7 +25,7 @@
     "date": "Date",
     "time": "Heure",
     "venue": "Lieu",
-    "price": "À partir de"
+    "price": "Prix"
   },
   "venue": {
     "title": "Notre salle de spectacle",

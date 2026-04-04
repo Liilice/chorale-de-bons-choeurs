@@ -25,7 +25,7 @@
     "date": "Date",
     "time": "Time",
     "venue": "Venue",
-    "price": "Starting at"
+    "price": "Price"
   },
   "venue": {
     "title": "Our Performance Venue",

@@ -112,7 +112,8 @@ export function Concerts() {
               </h3>
 
               <p className="text-gray-700">
-                Eglise Anglicane de Gustavia<br />
+                Eglise Anglicane de Gustavia
+                <br />
                 Rue Samuel Fahlberg, Gustavia 97133, Saint-Barthélemy
               </p>
             </div>
@@ -127,6 +128,20 @@ export function Concerts() {
                 <Image src="/ping.svg" alt="map" width={25} height={25} />
                 {tVenue("map")}
               </a>
+            </div>
+            <div className="flex flex-row justify-start items-center">
+              <Image
+                src="/logo_withoutBG.png"
+                alt="map"
+                width={100}
+                height={100}
+              />
+              <Image
+                src="/flag_saint_barthelemy.png"
+                alt="map"
+                width={150}
+                height={150}
+              />
             </div>
           </div>
           {/* Image */}

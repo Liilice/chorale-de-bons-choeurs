@@ -27,13 +27,19 @@ export function About() {
 
         <div className="relative z-20 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 sm:gap-12 items-center">
           <div className="lg:col-span-7 space-y-8">
-            <div className="relative">
+            <div className="relative flex flex-row items-center gap-4">
               <h1 className="text-2xl sm:text-5xl md:text-6xl text-gray-900 leading-[1.05] tracking-tight">
                 {t("title").split(" ").slice(0, 2).join(" ")} <br />
                 <span className="italic text-[#AF2027]">
                   {t("title").split(" ").slice(2).join(" ")}
                 </span>
               </h1>
+              <Image
+                src="/logo_withoutBG.png"
+                alt="Logo de la chorale"
+                width={100}
+                height={100}
+              />
             </div>
 
             <p className="text-md md:text-2xl text-black max-w-3xl leading-relaxed">

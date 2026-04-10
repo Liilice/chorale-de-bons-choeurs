@@ -13,22 +13,23 @@ export function About() {
 
   return (
     <>
-      <section className="relative min-h-[90vh] flex items-center pt-20 pb-24 px-6 overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-r from-white via-white/40 to-transparent z-10" />
-          <Image
-            src="/hero_v3.jpeg"
-            alt="Photo des artistes de notre chorale"
-            fill
-            priority
-            className="object-cover"
-          />
-        </div>
+      <section className="pt-10">
+        <div className="max-w-[90%] mx-auto w-full flex flex-col gap-6 md:flex-row md:gap-12">
+          {/* IMAGE EN DESSOUS */}
+          <div className="relative w-full h-[400px] sm:h-[500px] rounded-lg overflow-hidden">
+            <Image
+              src="/hero_v3.jpeg"
+              alt="Photo des artistes de notre chorale"
+              fill
+              priority
+              className="object-cover"
+            />
+          </div>
 
-        <div className="relative z-20 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 sm:gap-12 items-center">
-          <div className="lg:col-span-7 space-y-8">
-            <div className="relative flex flex-row items-center gap-4">
-              <h1 className="text-2xl sm:text-5xl md:text-6xl text-gray-900 leading-[1.05] tracking-tight">
+          {/* TEXTE AU-DESSUS */}
+          <div className="space-y-8">
+            <div className="flex flex-row items-center gap-4">
+              <h1 className="text-2xl sm:text-5xl text-gray-900 leading-[1.05] tracking-tight">
                 {t("title").split(" ").slice(0, 2).join(" ")} <br />
                 <span className="italic text-[#AF2027]">
                   {t("title").split(" ").slice(2).join(" ")}
@@ -37,12 +38,12 @@ export function About() {
               <Image
                 src="/logo_withoutBG.png"
                 alt="Logo de la chorale"
-                width={100}
-                height={100}
+                width={75}
+                height={75}
               />
             </div>
 
-            <p className="text-md md:text-2xl text-black max-w-3xl leading-relaxed">
+            <p className="text-md md:text-xl text-black max-w-3xl leading-relaxed">
               {t("description")}
             </p>
 
@@ -53,7 +54,7 @@ export function About() {
               {tConcerts("buyTickets")}
             </button>
 
-            <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 pt-4 text-gray-700">
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 text-gray-700">
               <div className="flex items-center gap-2">
                 <Image
                   src="/music.svg"

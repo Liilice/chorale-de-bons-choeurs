@@ -19,6 +19,27 @@ const Admin = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const [selectDate, setSelectDate] = useState<string>("");
+  const [orderData, setOrderData] = useState<Order[]>([]);
+  const [filterDate, setFilterDate] = useState<string[]>();
+
+  const groupedByDate = (data: Order[]) => {
+    const grouped: Record<string, Order[]> = {};
+
+    data.forEach((order) => {
+      if (!grouped[order.concertDate]) {
+        grouped[order.concertDate] = [];
+      }
+      grouped[order.concertDate].push(order);
+    });
+
+    const sortedDates = Object.keys(grouped).sort((a, b) => {
+      return new Date(a).getTime() - new Date(b).getTime();
+    });
+    setFilterDate(sortedDates);
+    setSelectDate(sortedDates[0] || "");
+    setOrders(grouped[sortedDates[0]] || []);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,7 +54,8 @@ const Admin = () => {
         }
 
         const data = await response.json();
-        setOrders(data);
+        setOrderData(data);
+        groupedByDate(data);
       } catch {
         setError("Erreur lors du chargement des commandes.");
       } finally {
@@ -70,9 +92,7 @@ const Admin = () => {
 
     setOrders((prev) =>
       prev.map((order) =>
-        order.id === orderId
-          ? { ...order, quantities: newQuantity }
-          : order
+        order.id === orderId ? { ...order, quantities: newQuantity } : order
       )
     );
 
@@ -130,6 +150,12 @@ const Admin = () => {
     await updateQuantity(orderId, targetOrder.quantities + 1);
   };
 
+  const changeOrdersByDate = (date: string) => {
+    setSelectDate(date);
+    const newOrders = orderData.filter((order) => order.concertDate === date);
+    setOrders(newOrders);
+  }
+
   return (
     <main className="min-h-screen bg-slate-50 p-6">
       <div className="mx-auto max-w-6xl">
@@ -143,6 +169,28 @@ const Admin = () => {
             </p>
           </div>
         </div>
+
+        {filterDate && (
+          <div className="flex flex-wrap gap-3 mb-6">
+            {filterDate.map((date) => (
+              <button
+                key={date}
+                className={`
+                px-4 py-2 rounded-xl text-sm font-medium transition
+                border
+                ${
+                  selectDate === date
+                    ? "bg-slate-900 text-white border-slate-900"
+                    : "bg-white text-slate-700 border-slate-300 hover:bg-slate-100"
+                }
+              `}
+              onClick={()=>changeOrdersByDate(date)}
+              >
+                {date}
+              </button>
+            ))}
+          </div>
+        )}
 
         {error && (
           <div className="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
@@ -177,7 +225,11 @@ const Admin = () => {
                       isFinished ? "bg-slate-50 opacity-70" : "bg-white"
                     }`}
                   >
-                    <div className={isFinished ? "line-through text-slate-400" : ""}>
+                    <div
+                      className={
+                        isFinished ? "line-through text-slate-400" : ""
+                      }
+                    >
                       <p className="text-lg font-semibold text-slate-900">
                         {order.name}
                       </p>

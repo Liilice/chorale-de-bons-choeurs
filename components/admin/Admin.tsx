@@ -37,8 +37,8 @@ const Admin = () => {
       return new Date(a).getTime() - new Date(b).getTime();
     });
     setFilterDate(sortedDates);
-    setSelectDate(sortedDates[0] || "");
-    setOrders(grouped[sortedDates[0]] || []);
+    setSelectDate(sortedDates[1] || "");
+    setOrders(grouped[sortedDates[1]] || []);
   };
 
   useEffect(() => {

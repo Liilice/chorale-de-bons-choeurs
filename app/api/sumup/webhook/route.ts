@@ -1,8 +1,75 @@
 import SumUp from "@sumup/sdk";
 import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
+import PDFDocument from "pdfkit";
+import QRCode from "qrcode";
 import { findOrderByOrderID, updateOrder } from "../../../../src/lib/orders";
 import { createTicketUsage } from "../../../../src/lib/ticket_usages";
+
+async function generateTicketPdf({
+  customerName,
+  customerEmail,
+  concertTitle,
+  concertDate,
+  concertTime,
+  ticketIndex,
+  ticketCount,
+  qrUrl,
+}: {
+  customerName: string;
+  customerEmail:string;
+  concertTitle: string;
+  concertDate: string;
+  concertTime: string;
+  ticketIndex: number;
+  ticketCount: number;
+  qrUrl: string;
+}): Promise<Buffer> {
+  const qrPng = await QRCode.toBuffer(qrUrl, { width: 360, margin: 1 });
+
+  return new Promise((resolve, reject) => {
+    const doc = new PDFDocument({ size: "A4", margin: 50 });
+    const chunks: Buffer[] = [];
+    doc.on("data", (chunk: Buffer) => chunks.push(chunk));
+    doc.on("end", () => resolve(Buffer.concat(chunks)));
+    doc.on("error", reject);
+
+    doc
+      .fillColor("#dc2626")
+      .fontSize(28)
+      .text("Chorale de Bons Chœurs", { align: "center" });
+    doc
+      .moveDown(0.3)
+      .fillColor("#9a3412")
+      .fontSize(14)
+      .text(concertTitle, { align: "center" });
+
+    doc.moveDown(1.5);
+    doc.strokeColor("#fed7aa").lineWidth(1).moveTo(50, doc.y).lineTo(545, doc.y).stroke();
+    doc.moveDown(1);
+
+    doc.fillColor("#111827").fontSize(12);
+    doc.text(`Nom : ${customerName}`);
+    doc.text(`Email : ${customerEmail}`);
+    doc.moveDown(0.3).text(`Date : ${concertDate}`);
+    doc.moveDown(0.3).text(`Heure : ${concertTime}`);
+    doc.moveDown(0.3).text(`Lieu : Église anglicane de Gustavia`);
+    doc.moveDown(0.3).text(`Billet : ${ticketIndex} / ${ticketCount}`);
+
+    doc.moveDown(2);
+    const qrSize = 240;
+    const qrX = (doc.page.width - qrSize) / 2;
+    doc.image(qrPng, qrX, doc.y, { width: qrSize, height: qrSize });
+
+    doc.moveDown(qrSize / 12 + 1);
+    doc
+      .fillColor("#9a3412")
+      .fontSize(11)
+      .text("À présenter à l'entrée du concert", { align: "center" });
+
+    doc.end();
+  });
+}
 
 enum Status {
   PENDING = "pending",
@@ -106,6 +173,16 @@ function getConfirmationEmailTemplate({
         </table>
       </div>
 
+      <!-- Pièces jointes -->
+      <div style="margin: 20px 0; padding: 16px; border-radius: 10px; background-color: #fff7ed; border: 1px dashed #fed7aa; text-align: center;">
+        <p style="margin: 0; font-size: 14px; color: #9a3412;">
+          📎 Vos <strong>${quantitiesBuy} billet${quantitiesBuy > 1 ? "s" : ""}</strong> ${quantitiesBuy > 1 ? "sont joints" : "est joint"} à ce mail au format PDF.
+        </p>
+        <p style="margin: 8px 0 0; font-size: 13px; color: #9a3412;">
+          À présenter (papier ou écran) à l'entrée du concert.
+        </p>
+      </div>
+
       <!-- Footer note -->
       <p style="margin: 0; font-size: 16px; color: #111827; font-weight: bold;">
         À très bientôt 🎶
@@ -145,7 +222,9 @@ export async function POST(req: NextRequest) {
 
     if (status === "PAID") {
       await updateOrder(order.id, { status: Status.PAID });
-      await createTicketUsage({
+
+      
+      const ticket = await createTicketUsage({
         name: order.name,
         email: order.email,
         concertDate: order.concertDate,
@@ -155,6 +234,28 @@ export async function POST(req: NextRequest) {
         quantities: order.quantities,
         createdAt: new Date().toISOString(),
       });
+
+      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? req.nextUrl.origin;
+      const pdfAttachments = await Promise.all(
+        Array.from({ length: order.quantities }, async (_, i) => {
+          const content = await generateTicketPdf({
+            customerName: order.name,
+            customerEmail: order.email,
+            concertTitle: order.concertTitle,
+            concertDate: order.concertDate,
+            concertTime: order.concertTime,
+            ticketIndex: i + 1,
+            ticketCount: order.quantities,
+            qrUrl: `${baseUrl}/admin/scan?ticket=${ticket}`,
+          });
+          return {
+            filename: `billet-${i + 1}.pdf`,
+            content,
+            contentType: "application/pdf",
+          };
+        })
+      );
+
       const transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
         port: 587,
@@ -178,6 +279,7 @@ export async function POST(req: NextRequest) {
             quantitiesBuy: order.quantities,
             basePrice: order.basePrice,
           }),
+          attachments: pdfAttachments,
         });
         return NextResponse.json({
           success: true,

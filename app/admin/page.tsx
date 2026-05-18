@@ -1,12 +1,24 @@
+"use client";
+
 import Admin from "@/components/admin/Admin";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
-export default async function AdminPage() {
-  const session = (await cookies()).get("admin_session");
+export default function AdminPage() {
+  const router = useRouter();
+  const [isAuthorized, setIsAuthorized] = useState(false);
 
-  if (!session) {
-    redirect("/admin/login");
+  useEffect(() => {
+    const token = localStorage.getItem("CDCBtoken");
+    if (!token) {
+      router.replace("/admin/login");
+      return;
+    }
+    setIsAuthorized(true);
+  }, [router]);
+
+  if (!isAuthorized) {
+    return null;
   }
 
   return <Admin />;

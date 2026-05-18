@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
 type Order = {
@@ -15,6 +16,7 @@ type Order = {
 };
 
 const Admin = () => {
+  const router = useRouter();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -22,6 +24,11 @@ const Admin = () => {
   const [selectDate, setSelectDate] = useState<string>("");
   const [orderData, setOrderData] = useState<Order[]>([]);
   const [filterDate, setFilterDate] = useState<string[]>();
+
+  const getAuthHeaders = (): HeadersInit => {
+    const token = localStorage.getItem("CDCBtoken");
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  };
 
   const groupedByDate = (data: Order[]) => {
     const grouped: Record<string, Order[]> = {};
@@ -47,13 +54,22 @@ const Admin = () => {
         setLoading(true);
         setError("");
 
-        const response = await fetch("/api/admin/ticketUsage");
+        const response = await fetch("/api/admin/ticketUsage", {
+          headers: getAuthHeaders(),
+        });
+
+        if (response.status === 401) {
+          localStorage.removeItem("CDCBtoken");
+          router.replace("/admin/login");
+          return;
+        }
 
         if (!response.ok) {
           throw new Error("Impossible de récupérer les commandes.");
         }
 
         const data = await response.json();
+        console.log("data", data)
         setOrderData(data);
         groupedByDate(data);
       } catch {
@@ -101,12 +117,19 @@ const Admin = () => {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
+          ...getAuthHeaders(),
         },
         body: JSON.stringify({
           id: orderId,
           quantities: newQuantity,
         }),
       });
+
+      if (response.status === 401) {
+        localStorage.removeItem("CDCBtoken");
+        router.replace("/admin/login");
+        return;
+      }
 
       if (!response.ok) {
         throw new Error("Erreur lors de la mise à jour.");

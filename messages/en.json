@@ -20,7 +20,8 @@
   },
   "concerts": {
     "title": "Upcoming",
-    "noUpcoming": "No upcoming concerts scheduled at the moment. Check back soon!",
+    "noUpcomingTitle": "Our next concerts are taking shape backstage",
+    "noUpcoming": "Our singers are rehearsing to bring you beautiful harmonies. Follow us on Facebook to be the first to know about upcoming dates!",
     "buyTickets": "Book Your Seat",
     "date": "Date",
     "time": "Time",

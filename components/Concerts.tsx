@@ -14,20 +14,20 @@ export interface Concert {
 }
 
 export const concerts: Concert[] = [
-  {
-    title: "Concert de Printemps",
-    date: "2026-04-10",
-    time: "20:00",
-    venue: "Eglise Anglicane de Gustavia",
-    price: 15,
-  },
-  {
-    title: "Concert de Printemps",
-    date: "2026-04-12",
-    time: "18:30",
-    venue: "Eglise Anglicane de Gustavia",
-    price: 15,
-  },
+  // {
+  //   title: "Concert de Printemps",
+  //   date: "2026-04-10",
+  //   time: "20:00",
+  //   venue: "Eglise Anglicane de Gustavia",
+  //   price: 15,
+  // },
+  // {
+  //   title: "Concert de Printemps",
+  //   date: "2026-04-12",
+  //   time: "18:30",
+  //   venue: "Eglise Anglicane de Gustavia",
+  //   price: 15,
+  // },
 ];
 
 export function Concerts() {
@@ -95,7 +95,17 @@ export function Concerts() {
             ))}
           </div>
         ) : (
-          <p className="text-center text-gray-600 text-lg">{t("noUpcoming")}</p>
+          <div className="mx-auto max-w-2xl rounded-2xl border border-gray-200 bg-white/60 px-8 py-12 text-center shadow-sm backdrop-blur">
+            <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-[#D2232A]/10 text-3xl">
+              🎶
+            </div>
+            <h3 className="text-2xl font-semibold text-gray-900">
+              {t("noUpcomingTitle")}
+            </h3>
+            <p className="mt-3 text-gray-600 leading-relaxed">
+              {t("noUpcoming")}
+            </p>
+          </div>
         )}
         <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
           {/* Content */}

@@ -1,6 +1,7 @@
 import { getOne } from "../../../../src/lib/admin";
 import { NextRequest, NextResponse } from "next/server";
 import * as bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
@@ -24,17 +25,19 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const response = NextResponse.json({
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    return NextResponse.json(
+      { success: false, message: "JWT secret not configured." },
+      { status: 500 }
+    );
+  }
+
+  const token = jwt.sign({ role: "admin" }, secret, { expiresIn: "1d" });
+
+  return NextResponse.json({
     success: true,
     message: "Connexion réussie",
+    token,
   });
-
-  response.cookies.set("admin_session", "true", {
-    httpOnly: true,     
-    secure: process.env.NODE_ENV === "production",
-    path: "/",
-    maxAge: 60 * 60 * 24, // 1 jour
-  });
-
-  return response;
 }

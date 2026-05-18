@@ -1,6 +1,5 @@
 import createMiddleware from "next-intl/middleware";
 import { NextRequest, NextResponse } from "next/server";
-import { routing } from "./i18n/routing";
 
 const intlMiddleware = createMiddleware({
   locales: ["fr", "en"],
@@ -15,9 +14,9 @@ export default function proxy(request: NextRequest) {
       return NextResponse.next();
     }
 
-    const session = request.cookies.get("admin_session");
+    const token = localStorage.getItem("CDCBtoken")
 
-    if (!session) {
+    if (!token) {
       return NextResponse.redirect(new URL("/admin/login", request.url));
     }
 

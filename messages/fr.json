@@ -20,7 +20,8 @@
   },
   "concerts": {
     "title": "À venir",
-    "noUpcoming": "Aucun concert à venir pour le moment. Revenez bientôt !",
+    "noUpcomingTitle": "Nos prochains concerts se préparent en coulisses",
+    "noUpcoming": "Nos choristes travaillent leurs partitions pour vous offrir de belles harmonies. Suivez-nous sur Facebook pour être les premiers informés des prochaines dates !",
     "buyTickets": "Réserver sa place",
     "date": "Date",
     "time": "Heure",

@@ -27,6 +27,7 @@ export default function LoginPage() {
 
       const data = await response.json();
       if (response.ok && data.success) {
+        localStorage.setItem("CDCBtoken", data.token)
         router.push("/admin");
         return;
       }

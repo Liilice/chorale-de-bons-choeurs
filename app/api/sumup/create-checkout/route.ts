@@ -1,6 +1,6 @@
 import SumUp from "@sumup/sdk";
 import { NextRequest, NextResponse } from "next/server";
-import { findOrCreateUser, findAll } from "../../../../src/lib/users";
+import { findOrCreateUser } from "../../../../src/lib/users";
 import { createOrder } from "../../../../src/lib/orders";
 
 const client = new SumUp({

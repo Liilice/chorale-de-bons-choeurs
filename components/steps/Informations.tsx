@@ -35,7 +35,7 @@ const Informations = ({
       <input
         type="text"
         required
-        className="mt-2 w-full px-2 py-2 border-gray-600  border-[1px] rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        className="mt-2 w-full px-2 py-2 border-gray-600  border-[1px] rounded-md focus:outline-none focus:ring-2 focus:ring-[#D2232A]"
         placeholder={t("name")}
         onChange={(e) => setCustomerName(e.target.value)}
       />{" "}
@@ -45,13 +45,13 @@ const Informations = ({
       <input
         type="email"
         required
-        className="mt-2 w-full px-2 py-2 border-gray-600  border-[1px] rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        className="mt-2 w-full px-2 py-2 border-gray-600  border-[1px] rounded-md focus:outline-none focus:ring-2 focus:ring-[#D2232A]"
         placeholder={t("email")}
         onChange={(e) => setCustomerEmail(e.target.value)}
       />
       <div className="space-y-4 mt-6 flex items-center justify-between p-4 border border-gray-200 rounded-lg">
         <div className="flex-1">
-          <div className="font-medium text-gray-900">adulte</div>
+          <div className="font-medium text-gray-900">{t("adult")}</div>
           <div className="text-gray-600">15€</div>
         </div>
         <div className="flex items-center gap-3">
@@ -72,7 +72,7 @@ const Informations = ({
               e.preventDefault();
               updateQuantity(1);
             }}
-            className="w-8 h-8 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold"
+            className="w-8 h-8 rounded-full bg-[#D2232A] hover:bg-[#AF2027] text-white font-bold"
           >
             +
           </button>
@@ -91,9 +91,9 @@ const Informations = ({
             handleCheckout();
           }}
           disabled={!hasTickets || loading || !customerEmail || !customerName}
-          className="w-full px-6 py-4 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+          className="w-full px-6 py-4 bg-[#D2232A] text-white font-medium rounded-lg hover:bg-[#AF2027] transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
         >
-          {loading ? "Chargement..." : t("checkout")}
+          {loading ? t("loading") : t("checkout")}
         </button>
 
         {error && <p className="mt-4 text-sm text-red-600">{error}</p>}

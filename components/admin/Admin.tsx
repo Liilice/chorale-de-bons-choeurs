@@ -44,8 +44,8 @@ const Admin = () => {
       return new Date(a).getTime() - new Date(b).getTime();
     });
     setFilterDate(sortedDates);
-    setSelectDate(sortedDates[1] || "");
-    setOrders(grouped[sortedDates[1]] || []);
+    setSelectDate(sortedDates[0] || "");
+    setOrders(grouped[sortedDates[0]] || []);
   };
 
   useEffect(() => {
@@ -80,6 +80,7 @@ const Admin = () => {
     };
 
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const sortedOrders = useMemo(() => {

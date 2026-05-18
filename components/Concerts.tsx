@@ -32,7 +32,6 @@ export const concerts: Concert[] = [
 
 export function Concerts() {
   const t = useTranslations("concerts");
-  const tVenue = useTranslations("venue");
 
   const [selectedConcert, setSelectedConcert] = useState<Concert | null>(null);
 
@@ -86,7 +85,7 @@ export function Concerts() {
                   </div>
                   <button
                     onClick={() => setSelectedConcert(concert)}
-                    className="w-full px-6 py-3 bg-[#D2232A] text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors"
+                    className="w-full px-6 py-3 bg-[#D2232A] text-white font-medium rounded-lg hover:bg-[#AF2027] transition-colors"
                   >
                     {t("buyTickets")}
                   </button>
@@ -95,78 +94,49 @@ export function Concerts() {
             ))}
           </div>
         ) : (
-          <div className="mx-auto max-w-2xl rounded-2xl border border-gray-200 bg-white/60 px-8 py-12 text-center shadow-sm backdrop-blur">
-            <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-[#D2232A]/10 text-3xl">
-              🎶
-            </div>
-            <h3 className="text-2xl font-semibold text-gray-900">
-              {t("noUpcomingTitle")}
-            </h3>
-            <p className="mt-3 text-gray-600 leading-relaxed">
-              {t("noUpcoming")}
-            </p>
-          </div>
-        )}
-        <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
-          {/* Content */}
-          <div className="w-full flex flex-col justify-center">
-            <h2 className="mt-4 mb-4 text-5xl text-on-background">
-              {tVenue("title")}
-            </h2>
+          <div className="relative overflow-hidden rounded-3xl border border-[#D2232A]/15 bg-gradient-to-br from-[#F6F0EA] via-white to-[#F6F0EA] px-6 py-14 sm:px-12 lg:px-20 lg:py-20 shadow-sm">
+            <div className="pointer-events-none absolute -top-16 -right-16 h-56 w-56 rounded-full bg-[#D2232A]/5 blur-3xl" />
+            <div className="pointer-events-none absolute -bottom-20 -left-10 h-64 w-64 rounded-full bg-[#D2232A]/5 blur-3xl" />
 
-            <p className="text-lg text-gray-700 mb-8 leading-relaxed">
-              {tVenue("description")}
-            </p>
+            <div className="relative mx-auto flex max-w-2xl flex-col items-center text-center">
+              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-md ring-1 ring-[#D2232A]/20">
+                <Image
+                  src="/music.svg"
+                  alt=""
+                  width={32}
+                  height={32}
+                  aria-hidden
+                />
+              </div>
 
-            <div className="bg-[#F6F0EA] px-10 py-5">
-              <h3 className="font-semibold text-xl text-gray-900 mb-2">
-                {tVenue("address")}
+              <h3 className="text-2xl sm:text-3xl font-semibold text-gray-900 leading-tight">
+                {t("noUpcomingTitle")}
               </h3>
 
-              <p className="text-gray-700">
-                Eglise Anglicane de Gustavia
-                <br />
-                Rue Samuel Fahlberg, Gustavia 97133, Saint-Barthélemy
+              <p className="mt-4 max-w-xl text-gray-600 leading-relaxed">
+                {t("noUpcoming")}
               </p>
-            </div>
 
-            <div className="mt-4">
               <a
-                href="https://www.google.com/maps?q=Rue+Samuel+Fahlberg,+Gustavia+97133,+Saint-Barthélemy"
+                href="https://www.facebook.com/ChoraledeBonsChoeurs"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-lg font-bold uppercase text-[#D2232A] hover:underline"
+                className="mt-8 inline-flex items-center gap-2 rounded-full bg-[#D2232A] px-7 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow-md transition hover:bg-[#AF2027] hover:shadow-lg"
               >
-                <Image src="/ping.svg" alt="map" width={25} height={25} />
-                {tVenue("map")}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="h-4 w-4"
+                  aria-hidden
+                >
+                  <path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5 3.66 9.14 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.52 1.49-3.91 3.78-3.91 1.09 0 2.24.2 2.24.2v2.47h-1.26c-1.24 0-1.63.78-1.63 1.57v1.88h2.78l-.44 2.91h-2.34V22c4.78-.8 8.43-4.94 8.43-9.94Z" />
+                </svg>
+                {t("followFacebook")}
               </a>
             </div>
-            <div className="flex flex-row justify-start items-center">
-              <Image
-                src="/logo_withoutBG.png"
-                alt="map"
-                width={100}
-                height={100}
-              />
-              <Image
-                src="/flag_saint_barthelemy.png"
-                alt="map"
-                width={150}
-                height={150}
-              />
-            </div>
           </div>
-          {/* Image */}
-          <div className="w-full h-full">
-            <Image
-              src="/eglise.png"
-              alt="Église"
-              width={700}
-              height={400}
-              className="w-full h-full object-cover rounded-xl"
-            />
-          </div>
-        </div>
+        )}
       </section>
 
       {selectedConcert && (

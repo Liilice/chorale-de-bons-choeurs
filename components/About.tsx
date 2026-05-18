@@ -30,9 +30,9 @@ export function About() {
           <div className="space-y-8">
             <div className="flex flex-row items-center gap-4">
               <h1 className="text-2xl sm:text-5xl text-gray-900 leading-[1.05] tracking-tight">
-                {t("title").split(" ").slice(0, 2).join(" ")} <br />
+                {t("titlePrefix")} <br />
                 <span className="italic text-[#AF2027]">
-                  {t("title").split(" ").slice(2).join(" ")}
+                  {t("titleAccent")}
                 </span>
               </h1>
               <Image
@@ -47,12 +47,14 @@ export function About() {
               {t("description")}
             </p>
 
-            <button
-              onClick={() => setSelectedConcert(concerts[0])}
-              className="px-8 py-4 bg-[#AF2027] text-white font-bold uppercase tracking-widest rounded-sm shadow-lg hover:brightness-110 transition-all duration-300"
-            >
-              {tConcerts("buyTickets")}
-            </button>
+            {concerts.length > 0 && (
+              <button
+                onClick={() => setSelectedConcert(concerts[0])}
+                className="px-8 py-4 bg-[#D2232A] text-white font-bold uppercase tracking-widest rounded-sm shadow-lg hover:bg-[#AF2027] transition-all duration-300"
+              >
+                {tConcerts("buyTickets")}
+              </button>
+            )}
 
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 text-gray-700">
               <div className="flex items-center gap-2">

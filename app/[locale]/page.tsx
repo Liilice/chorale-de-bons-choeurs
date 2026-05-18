@@ -1,6 +1,7 @@
 import { Header } from "@/components/Header";
 import { About } from "@/components/About";
 import { Concerts } from "@/components/Concerts";
+import { Venue } from "@/components/Venue";
 import { Footer } from "@/components/Footer";
 
 export default function Home() {
@@ -9,6 +10,7 @@ export default function Home() {
       <Header />
       <About />
       <Concerts />
+      <Venue />
       <Footer />
     </div>
   );

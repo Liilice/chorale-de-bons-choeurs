@@ -10,7 +10,7 @@ export async function GET(req: Request) {
   try {
     const ticketUsages = await findAllTicketUsage();
     return Response.json(ticketUsages);
-  } catch (error) {
+  } catch {
     return Response.json(
       { error: "Failed to fetch ticket usages" },
       { status: 500 }

@@ -2,7 +2,6 @@
 
 import { useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
-import Image from "next/image";
 
 export function Header() {
   const t = useTranslations("navigation");
@@ -18,9 +17,6 @@ export function Header() {
 
   return (
     <nav className="fixed top-0 left-0 right-0  z-50 bg-white/90 backdrop-blur-sm border-b border-gray-200 mx-auto px-4 lg:px-16 py-4 flex flex-col sm:flex-row items-center justify-between">
-      {/* <div>
-          <Image src="/logo.png" alt="Logo de la chorale" width={75} height={75}/>
-        </div> */}
       <h2 className="text-2xl font-bold text-[#AF2027] italic">
         {tAbout("title")}
       </h2>

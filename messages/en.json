@@ -12,6 +12,8 @@
   },
   "about": {
     "title": "Chorale de Bons Chœurs",
+    "titlePrefix": "Chorale de",
+    "titleAccent": "Bons Chœurs",
     "description": "Founded in Saint-Barthélemy, Chorale de Bons Chœurs is a community of passionate singers dedicated to celebrating the art of choral music. With a diverse repertoire spanning classical masterpieces to contemporary arrangements, we strive to bring joy and inspiration through every performance.",
     "members": "Active Members",
     "years": "Years of Performance",
@@ -22,6 +24,7 @@
     "title": "Upcoming",
     "noUpcomingTitle": "Our next concerts are taking shape backstage",
     "noUpcoming": "Our singers are rehearsing to bring you beautiful harmonies. Follow us on Facebook to be the first to know about upcoming dates!",
+    "followFacebook": "Follow us on Facebook",
     "buyTickets": "Book Your Seat",
     "date": "Date",
     "time": "Time",
@@ -56,12 +59,13 @@
     "student": "Student",
     "child": "Child (under 12)",
     "senior": "Senior (65+)",
-    "selectTickets": "Please select at least one ticket"
+    "selectTickets": "Please select at least one ticket",
+    "loading": "Loading..."
   },
   "confirm" : {
     "title": "Payment Confirmed !",
     "message": "Thank you for your purchase. Your payment has been successfully processed.",
     "subMessage" : "Your reservation for the concert has been successfully recorded. You will receive a confirmation email shortly with your order details and tickets.",
-    "spam": "Your reservation for the concert has been successfully recorded. You will receive a confirmation email shortly with your order details and tickets."
+    "spam": "If you don't receive an email within a few minutes, please check your spam or junk folder."
   }
 }

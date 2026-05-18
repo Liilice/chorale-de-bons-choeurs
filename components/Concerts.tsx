@@ -14,13 +14,13 @@ export interface Concert {
 }
 
 export const concerts: Concert[] = [
-  // {
-  //   title: "Concert de Printemps",
-  //   date: "2026-04-10",
-  //   time: "20:00",
-  //   venue: "Eglise Anglicane de Gustavia",
-  //   price: 15,
-  // },
+  {
+    title: "Concert de Printemps",
+    date: "2026-04-10",
+    time: "20:00",
+    venue: "Eglise Anglicane de Gustavia",
+    price: 15,
+  },
   // {
   //   title: "Concert de Printemps",
   //   date: "2026-04-12",

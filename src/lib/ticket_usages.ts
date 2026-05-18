@@ -1,6 +1,6 @@
 import { db } from "./firebase-admin";
 
-type TicketUsage = {
+export type TicketUsage = {
   name: string;
   email: string;
   concertDate: string;
@@ -11,7 +11,7 @@ type TicketUsage = {
   createdAt: string;
 };
 
-type TicketUsageWithID = TicketUsage & { id: string };
+export type TicketUsageWithID = TicketUsage & { id: string };
 
 export async function createTicketUsage(data: TicketUsage): Promise<string> {
   const docRef = await db.collection("ticketUsage").add({
@@ -44,4 +44,35 @@ export async function findAllTicketUsage(): Promise<TicketUsageWithID[]> {
     } as TicketUsageWithID;
   });
   return ticketUsage;
+}
+
+export type ScanOutcome =
+  | { status: "ok"; ticket: TicketUsageWithID }
+  | { status: "already_used"; ticket: TicketUsageWithID }
+  | { status: "not_found" };
+
+export async function consumeOneTicket(documentID: string): Promise<ScanOutcome> {
+  const ref = db.collection("ticketUsage").doc(documentID);
+
+  return db.runTransaction<ScanOutcome>(async (tx) => {
+    const snap = await tx.get(ref);
+    if (!snap.exists) {
+      return { status: "not_found" };
+    }
+
+    const data = snap.data() as TicketUsage;
+    const ticket: TicketUsageWithID = { ...data, id: snap.id };
+
+    if (data.quantities <= 0) {
+      return { status: "already_used", ticket };
+    }
+
+    const newQty = data.quantities - 1;
+    tx.update(ref, { quantities: newQty });
+
+    return {
+      status: "ok",
+      ticket: { ...ticket, quantities: newQty },
+    };
+  });
 }

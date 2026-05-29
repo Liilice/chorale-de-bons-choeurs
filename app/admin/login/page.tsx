@@ -1,10 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+
+function isSafeRedirect(value: string | null): value is string {
+  return !!value && value.startsWith("/") && !value.startsWith("//");
+}
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectParam = searchParams.get("redirect");
+  const redirectTo = isSafeRedirect(redirectParam) ? redirectParam : "/admin";
+
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -27,8 +35,8 @@ export default function LoginPage() {
 
       const data = await response.json();
       if (response.ok && data.success) {
-        localStorage.setItem("CDCBtoken", data.token)
-        router.push("/admin");
+        localStorage.setItem("CDCBtoken", data.token);
+        router.push(redirectTo);
         return;
       }
 

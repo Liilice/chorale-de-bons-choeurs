@@ -1,13 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyAdminBearer, verifyTicketToken } from "../../../../src/lib/auth";
-import { consumeOneTicket } from "../../../../src/lib/ticket_usages";
+import {
+  consumeOneTicket,
+  findTicketUsage,
+} from "../../../../src/lib/ticket_usages";
 
 type ScanRequestBody = {
   ticketToken?: string;
   qrUrl?: string;
 };
 
-function extractToken(body: ScanRequestBody): string | null {
+function extractTokenFromBody(body: ScanRequestBody): string | null {
   if (body.ticketToken) return body.ticketToken;
   if (body.qrUrl) {
     try {
@@ -18,6 +21,54 @@ function extractToken(body: ScanRequestBody): string | null {
     }
   }
   return null;
+}
+
+export async function GET(req: NextRequest) {
+  const auth = verifyAdminBearer(req);
+  if (!auth.ok) {
+    return NextResponse.json(
+      { status: "unauthorized", message: auth.message },
+      { status: auth.status }
+    );
+  }
+
+  const token = req.nextUrl.searchParams.get("t");
+  if (!token) {
+    return NextResponse.json(
+      { status: "invalid", message: "Missing ticket token" },
+      { status: 400 }
+    );
+  }
+
+  const verified = verifyTicketToken(token);
+  if (!verified.ok) {
+    return NextResponse.json(
+      { status: "invalid", message: verified.message },
+      { status: verified.status }
+    );
+  }
+
+  const { tid, cd } = verified.payload;
+  const ticket = await findTicketUsage(tid);
+
+  if (!ticket) {
+    return NextResponse.json(
+      { status: "not_found", message: "Ticket inconnu" },
+      { status: 404 }
+    );
+  }
+
+  return NextResponse.json({
+    status: ticket.quantities > 0 ? "available" : "already_used",
+    name: ticket.name,
+    email: ticket.email,
+    concertTitle: ticket.concertTitle,
+    concertDate: ticket.concertDate,
+    concertTime: ticket.concertTime,
+    remaining: ticket.quantities,
+    totalBought: ticket.quantitiesBuy,
+    expectedConcertDate: cd,
+  });
 }
 
 export async function POST(req: NextRequest) {
@@ -39,7 +90,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const token = extractToken(body);
+  const token = extractTokenFromBody(body);
   if (!token) {
     return NextResponse.json(
       { status: "invalid", message: "Missing ticket token" },

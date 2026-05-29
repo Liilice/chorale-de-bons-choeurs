@@ -11,6 +11,11 @@ export type TicketUsage = {
   createdAt: string;
 };
 
+export type GroupedTicketUsage = {
+  concertDate: string;
+  tickets: TicketUsage[];
+};
+
 export type TicketUsageWithID = TicketUsage & { id: string };
 
 export async function createTicketUsage(data: TicketUsage): Promise<string> {
@@ -31,19 +36,54 @@ export async function updateTicketUsage(
   documentID: string,
   update: Partial<TicketUsage>
 ): Promise<void> {
+  const docRef = db.collection("ticketUsage").doc(documentID);
+  if (!(await docRef.get()).exists) {
+    throw new Error("Document not found");
+  }
+  const quantitiesBuy = (await docRef.get()).data()?.quantitiesBuy;
+  if(update.quantities && (update.quantities > quantitiesBuy || update.quantities < 0)) {
+    throw new Error("Invalid quantities value");
+  }
+
   await db.collection("ticketUsage").doc(documentID).update(update);
 }
 
-export async function findAllTicketUsage(): Promise<TicketUsageWithID[]> {
+// export async function findAllTicketUsage(): Promise<TicketUsageWithID[]> {
+//   const snapshot = await db.collection("ticketUsage").get();
+//   const ticketUsage = snapshot.docs.map((doc) => {
+//     const docData = doc.data();
+//     return {
+//       ...docData,
+//       id: doc.id,
+//     } as TicketUsageWithID;
+//   });
+//   return ticketUsage;
+// }
+
+export async function findAllTicketUsage(): Promise<
+  GroupedTicketUsage[]
+> {
   const snapshot = await db.collection("ticketUsage").get();
-  const ticketUsage = snapshot.docs.map((doc) => {
-    const docData = doc.data();
-    return {
-      ...docData,
-      id: doc.id,
-    } as TicketUsageWithID;
-  });
-  return ticketUsage;
+  const ticketUsage = snapshot.docs.map(
+    (doc) =>
+      ({
+        ...doc.data(),
+        id: doc.id,
+      } as TicketUsageWithID)
+  );
+
+  const grouped = ticketUsage.reduce<Record<string, TicketUsageWithID[]>>(
+    (acc, ticket) => {
+      (acc[ticket.concertDate] ??= []).push(ticket);
+      return acc;
+    },
+    {}
+  );
+
+  return Object.entries(grouped).map(([concertDate, tickets]) => ({
+    concertDate,
+    tickets,
+  }));
 }
 
 export type ScanOutcome =
@@ -51,7 +91,17 @@ export type ScanOutcome =
   | { status: "already_used"; ticket: TicketUsageWithID }
   | { status: "not_found" };
 
-export async function consumeOneTicket(documentID: string): Promise<ScanOutcome> {
+export async function findTicketUsage(
+  documentID: string
+): Promise<TicketUsageWithID | null> {
+  const snap = await db.collection("ticketUsage").doc(documentID).get();
+  if (!snap.exists) return null;
+  return { ...(snap.data() as TicketUsage), id: snap.id };
+}
+
+export async function consumeOneTicket(
+  documentID: string
+): Promise<ScanOutcome> {
   const ref = db.collection("ticketUsage").doc(documentID);
 
   return db.runTransaction<ScanOutcome>(async (tx) => {

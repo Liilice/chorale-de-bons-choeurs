@@ -21,13 +21,13 @@ export const concerts: Concert[] = [
     venue: "Eglise Anglicane de Gustavia",
     price: 15,
   },
-  // {
-  //   title: "Concert de Printemps",
-  //   date: "2026-04-12",
-  //   time: "18:30",
-  //   venue: "Eglise Anglicane de Gustavia",
-  //   price: 15,
-  // },
+  {
+    title: "Concert de Printemps",
+    date: "2026-04-12",
+    time: "18:30",
+    venue: "Eglise Anglicane de Gustavia",
+    price: 15,
+  },
 ];
 
 export function Concerts() {

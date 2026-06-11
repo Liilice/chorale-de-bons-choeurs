@@ -34,7 +34,7 @@ const Paiement = ({
 
               {/* Message */}
               <h2 className="text-lg font-semibold text-gray-800 mb-4">
-                Le paiement n'a pas pu être traité
+                Le paiement n&apos;a pas pu être traité
               </h2>
 
               {/* Button */}

@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 
 export default function AdminPage() {
   const router = useRouter();
-  const [isAuthorized, setIsAuthorized] = useState(false);
+  const [hasToken, setHasToken] = useState<boolean | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem("CDCBtoken");
@@ -14,10 +14,11 @@ export default function AdminPage() {
       router.replace("/admin/login");
       return;
     }
-    setIsAuthorized(true);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setHasToken(true);
   }, [router]);
 
-  if (!isAuthorized) {
+  if (hasToken !== true) {
     return null;
   }
 

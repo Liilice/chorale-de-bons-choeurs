@@ -5,6 +5,7 @@ import PDFDocument from "pdfkit";
 import QRCode from "qrcode";
 import { findOrderByOrderID, updateOrder } from "../../../../src/lib/orders";
 import { createTicketUsage } from "../../../../src/lib/ticket_usages";
+import { signTicketToken } from "../../../../src/lib/auth";
 
 async function generateTicketPdf({
   customerName,
@@ -236,6 +237,11 @@ export async function POST(req: NextRequest) {
       });
 
       const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? req.nextUrl.origin;
+      const signed = signTicketToken(ticket, order.concertDate);
+      if (!signed) {
+        throw new Error("JWT secret not configured");
+      }
+      const ticketToken = signed.token;
       const pdfAttachments = await Promise.all(
         Array.from({ length: order.quantities }, async (_, i) => {
           const content = await generateTicketPdf({
@@ -246,7 +252,7 @@ export async function POST(req: NextRequest) {
             concertTime: order.concertTime,
             ticketIndex: i + 1,
             ticketCount: order.quantities,
-            qrUrl: `${baseUrl}/admin/scan?ticket=${ticket}`,
+            qrUrl: `${baseUrl}/admin/scan?t=${ticketToken}`,
           });
           return {
             filename: `billet-${i + 1}.pdf`,

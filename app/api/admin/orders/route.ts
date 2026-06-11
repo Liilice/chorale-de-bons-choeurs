@@ -10,7 +10,7 @@ export async function GET(req: Request) {
   try {
     const orders = await findAllOrders();
     return Response.json(orders);
-  } catch (error) {
+  } catch {
     return Response.json({ error: "Failed to fetch orders" }, { status: 500 });
   }
 }

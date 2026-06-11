@@ -105,11 +105,15 @@ export function TicketingModal({ concert, onClose }: TicketingModalProps) {
       window.SumUpCard.mount({
         id: "sumup-card",
         checkoutId: data.checkoutId,
-        onResponse: (type, body: any) => {
+        onResponse: (type, body) => {
           console.log("Réponse du paiement SumUp:", { type, body });
-          if (type === "success" && body.status === "PAID") {
+          const status =
+            body && typeof body === "object" && "status" in body
+              ? (body as { status?: string }).status
+              : undefined;
+          if (type === "success" && status === "PAID") {
             setStep("confirm");
-          } else if (type === "success" && body.status === "FAILED") {
+          } else if (type === "success" && status === "FAILED") {
             setPaiementError(true);
             setStep("payment");
           }

@@ -15,6 +15,11 @@ type Order = {
   quantities: number;
 };
 
+type GroupedOrders = {
+  concertDate: string;
+  tickets: Order[];
+};
+
 const Admin = () => {
   const router = useRouter();
   const [orders, setOrders] = useState<Order[]>([]);
@@ -22,7 +27,7 @@ const Admin = () => {
   const [error, setError] = useState("");
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [selectDate, setSelectDate] = useState<string>("");
-  const [orderData, setOrderData] = useState<Order[]>([]);
+  const [orderData, setOrderData] = useState<GroupedOrders[]>([]);
   const [filterDate, setFilterDate] = useState<string[]>();
 
   const getAuthHeaders = (): HeadersInit => {
@@ -30,22 +35,18 @@ const Admin = () => {
     return token ? { Authorization: `Bearer ${token}` } : {};
   };
 
-  const groupedByDate = (data: Order[]) => {
-    const grouped: Record<string, Order[]> = {};
+  const initFromGroups = (data: GroupedOrders[]) => {
+    const sortedDates = [...data]
+      .map((group) => group.concertDate)
+      .sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
-    data.forEach((order) => {
-      if (!grouped[order.concertDate]) {
-        grouped[order.concertDate] = [];
-      }
-      grouped[order.concertDate].push(order);
-    });
-
-    const sortedDates = Object.keys(grouped).sort((a, b) => {
-      return new Date(a).getTime() - new Date(b).getTime();
-    });
     setFilterDate(sortedDates);
-    setSelectDate(sortedDates[1] || "");
-    setOrders(grouped[sortedDates[1]] || []);
+
+    const firstDate = sortedDates[0] || "";
+    setSelectDate(firstDate);
+    setOrders(
+      data.find((group) => group.concertDate === firstDate)?.tickets || []
+    );
   };
 
   useEffect(() => {
@@ -68,10 +69,9 @@ const Admin = () => {
           throw new Error("Impossible de récupérer les commandes.");
         }
 
-        const data = await response.json();
-        console.log("data", data)
+        const data: GroupedOrders[] = await response.json();
         setOrderData(data);
-        groupedByDate(data);
+        initFromGroups(data);
       } catch {
         setError("Erreur lors du chargement des commandes.");
       } finally {
@@ -80,6 +80,7 @@ const Admin = () => {
     };
 
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const sortedOrders = useMemo(() => {
@@ -106,11 +107,23 @@ const Admin = () => {
     setError("");
     setUpdatingId(orderId);
 
-    setOrders((prev) =>
-      prev.map((order) =>
-        order.id === orderId ? { ...order, quantities: newQuantity } : order
-      )
-    );
+    const applyQuantity = (quantity: number) => {
+      setOrders((prev) =>
+        prev.map((order) =>
+          order.id === orderId ? { ...order, quantities: quantity } : order
+        )
+      );
+      setOrderData((prev) =>
+        prev.map((group) => ({
+          ...group,
+          tickets: group.tickets.map((order) =>
+            order.id === orderId ? { ...order, quantities: quantity } : order
+          ),
+        }))
+      );
+    };
+
+    applyQuantity(newQuantity);
 
     try {
       const response = await fetch("/api/admin/ticketUsage", {
@@ -134,14 +147,10 @@ const Admin = () => {
       if (!response.ok) {
         throw new Error("Erreur lors de la mise à jour.");
       }
+
+      await response.json();
     } catch {
-      setOrders((prev) =>
-        prev.map((order) =>
-          order.id === orderId
-            ? { ...order, quantities: previousQuantity }
-            : order
-        )
-      );
+      applyQuantity(previousQuantity);
 
       setError("La quantité n’a pas pu être mise à jour.");
     } finally {
@@ -175,9 +184,10 @@ const Admin = () => {
 
   const changeOrdersByDate = (date: string) => {
     setSelectDate(date);
-    const newOrders = orderData.filter((order) => order.concertDate === date);
+    const newOrders =
+      orderData.find((group) => group.concertDate === date)?.tickets || [];
     setOrders(newOrders);
-  }
+  };
 
   return (
     <main className="min-h-screen bg-slate-50 p-6">
@@ -207,7 +217,7 @@ const Admin = () => {
                     : "bg-white text-slate-700 border-slate-300 hover:bg-slate-100"
                 }
               `}
-              onClick={()=>changeOrdersByDate(date)}
+                onClick={() => changeOrdersByDate(date)}
               >
                 {date}
               </button>

@@ -3,7 +3,11 @@ import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import PDFDocument from "pdfkit";
 import QRCode from "qrcode";
-import { findOrderByOrderID, updateOrder } from "../../../../src/lib/orders";
+import {
+  findOrderByOrderID,
+  markOrderAsPaidOnce,
+  updateOrder,
+} from "../../../../src/lib/orders";
 import { createTicketUsage } from "../../../../src/lib/ticket_usages";
 import { signTicketToken } from "../../../../src/lib/auth";
 
@@ -222,9 +226,12 @@ export async function POST(req: NextRequest) {
     const order = await findOrderByOrderID(reference);
 
     if (status === "PAID") {
-      await updateOrder(order.id, { status: Status.PAID });
+      const isFirstPaidEvent = await markOrderAsPaidOnce(order.id);
+      if (!isFirstPaidEvent) {
+        console.log("Commande déjà traitée, webhook ignoré:", reference);
+        return new NextResponse(null, { status: 204 });
+      }
 
-      
       const ticket = await createTicketUsage({
         name: order.name,
         email: order.email,

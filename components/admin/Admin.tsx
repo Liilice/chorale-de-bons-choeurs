@@ -1,7 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import QrScanner from "./QrScanner";
 
 type Order = {
   id: string;
@@ -29,6 +30,17 @@ const Admin = () => {
   const [selectDate, setSelectDate] = useState<string>("");
   const [orderData, setOrderData] = useState<GroupedOrders[]>([]);
   const [filterDate, setFilterDate] = useState<string[]>();
+  // /admin?scan=1 rouvre directement le scanner (enchaînement des billets)
+  const [isScanning, setIsScanning] = useState(() =>
+    new URLSearchParams(window.location.search).has("scan")
+  );
+
+  const handleTicketDetected = useCallback(
+    (ticketToken: string) => {
+      router.push(`/admin/scan?t=${encodeURIComponent(ticketToken)}`);
+    },
+    [router]
+  );
 
   const getAuthHeaders = (): HeadersInit => {
     const token = localStorage.getItem("CDCBtoken");
@@ -201,7 +213,24 @@ const Admin = () => {
               Gestion des billets utilisés
             </p>
           </div>
+          <button
+            type="button"
+            onClick={() => setIsScanning(true)}
+            className="rounded-xl bg-[#D2232A] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#AF2027]"
+          >
+            Scanner un billet
+          </button>
         </div>
+
+        {isScanning && (
+          <QrScanner
+            onDetected={handleTicketDetected}
+            onClose={() => {
+              setIsScanning(false);
+              router.replace("/admin");
+            }}
+          />
+        )}
 
         {filterDate && (
           <div className="flex flex-wrap gap-3 mb-6">

@@ -122,6 +122,7 @@ function ScanPageInner() {
   };
 
   const goAdmin = () => router.push("/admin");
+  const scanNext = () => router.push("/admin?scan=1");
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 flex items-center justify-center px-4 py-10">
@@ -164,7 +165,11 @@ function ScanPageInner() {
         )}
 
         {view.kind === "result" && (
-          <ResultCard result={view.data} onClose={goAdmin} />
+          <ResultCard
+            result={view.data}
+            onClose={goAdmin}
+            onScanNext={scanNext}
+          />
         )}
       </div>
     </main>
@@ -239,9 +244,11 @@ function PreviewCard({
 function ResultCard({
   result,
   onClose,
+  onScanNext,
 }: {
   result: ScanResult;
   onClose: () => void;
+  onScanNext: () => void;
 }) {
   const isOk = result.status === "ok";
   const isAlreadyUsed = result.status === "already_used";
@@ -309,6 +316,12 @@ function ResultCard({
         <p className="text-sm text-slate-600">{body}</p>
       </div>
 
+      <button
+        onClick={onScanNext}
+        className="w-full rounded-xl bg-[#D2232A] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#AF2027]"
+      >
+        Scanner le billet suivant
+      </button>
       <button
         onClick={onClose}
         className="w-full rounded-xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"

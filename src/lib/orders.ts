@@ -54,6 +54,20 @@ export async function updateOrder(
   await db.collection("orders").doc(documentID).update(update);
 }
 
+// Passe la commande en "paid" de façon atomique.
+// Renvoie false si elle l'était déjà (webhook reçu plusieurs fois).
+export async function markOrderAsPaidOnce(documentID: string): Promise<boolean> {
+  const ref = db.collection("orders").doc(documentID);
+  return db.runTransaction(async (tx) => {
+    const snap = await tx.get(ref);
+    if (!snap.exists || snap.data()?.status === "paid") {
+      return false;
+    }
+    tx.update(ref, { status: "paid" });
+    return true;
+  });
+}
+
 export async function findAllOrders(): Promise<Order[]> {
   const snapshot = await db.collection("orders").get();
   const orders = snapshot.docs.map((doc) => {
